@@ -1,0 +1,15 @@
+{
+  "venue_manager": [
+      {
+          "ManagerID": 1,
+          "ManagerName": "wawan",
+          "ManagerEmail": "wawan@itb.ac.id",
+          "Password": "wawan",
+          "Description": "I like football",
+          "Province": "Jawa Barat",
+          "City": "Bandung",
+          "Street": "Dago",
+          "DisplayName": "Wawan Ganesha"
+      }
+  ]
+}

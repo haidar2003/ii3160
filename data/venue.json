@@ -1,0 +1,14 @@
+{
+    "venue": [
+        {
+            "VenueID" : 1,
+            "VenueName" : "Saraga",
+            "VenueManager" : 1,
+            "Price" : 10000,
+            "Province" : "Jawa Barat",
+            "City" : "Bandung",
+            "Street" : "Dago",
+            "Description" : "Lapangan punya ITB"
+        }
+    ]
+}
