@@ -48,6 +48,13 @@
             "UserID": 7,
             "BookingDate": "2023-12-12 11:00:00",
             "TransactionID": 7
+        },
+        {
+            "BookingID": 8,
+            "VenueID": 1,
+            "UserID": 7,
+            "BookingDate": "2022-02-20 20:00:00",
+            "TransactionID": 8
         }
     ]
 }

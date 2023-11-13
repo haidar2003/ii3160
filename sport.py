@@ -10,9 +10,13 @@ json_filename = f"{json_folder}/sport.json"
 with open(json_filename,"r") as read_file:
     data = json.load(read_file)
 
+
+# Menampilkan semua olahraga di aplikasi
 def read_all_sport() -> List[SportItem]:
     return [SportItem(**sport) for sport in data['sport']]
 
+
+# Menambahkan olahraga ke aplikasi
 def create_sport(sport_name: str) -> SportItem:
     existing_sport_names = set(sport['SportName'].lower() for sport in data['sport'])
     if sport_name.lower() in existing_sport_names:
@@ -35,6 +39,8 @@ def create_sport(sport_name: str) -> SportItem:
         
     return SportItem(**new_sport)
 
+
+# Menghapus olahraga dari aplikasi
 def delete_sport(sport_name: str) -> SportItem:
     existing_sport = next((sport for sport in data['sport'] if sport['SportName'].lower() == sport_name.lower()), None)
     

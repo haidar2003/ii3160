@@ -20,6 +20,8 @@ def load_json(filename):
         data = json.load(f)[filename]
     return data
 
+
+# Menampilkan profil pengguna berdasarkan preferensi olahraga tertentu
 def read_user_by_sport(sport_name: str) -> List[UserItemResponse]:
     user_data = load_json(json_filename_user)
     sport_data = load_json(json_filename_sport)
@@ -45,6 +47,7 @@ def read_user_by_sport(sport_name: str) -> List[UserItemResponse]:
     return valid_user_list
 
 
+# Menampilkan profil pengguna di kota tertentu
 def read_user_by_city(city_name: str) -> List[UserItemResponse]:
     user_data = load_json(json_filename_user)
     sport_data = load_json(json_filename_sport)
@@ -63,17 +66,14 @@ def read_user_by_city(city_name: str) -> List[UserItemResponse]:
 
     return valid_user_list
 
-def create_booking(username: str, password: str, venue_id: int, event_date: DateItem):
+
+# Membuat booking venue olahraga baru
+def create_booking(username: str, venue_id: int, event_date: DateItem):
     user_data = load_json(json_filename_user)
     venues_data = load_json(json_filename_venue)
     bookings_data = load_json(json_filename_booking)
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     venue = next((venue for venue in venues_data if venue['VenueID'] == venue_id), None)
     if not venue:
@@ -106,17 +106,14 @@ def create_booking(username: str, password: str, venue_id: int, event_date: Date
 
     return new_booking
 
-def create_event(username: str, password: str, event_details: EventItem):
+
+# Membuat event olahraga baru
+def create_event(username: str, event_details: EventItem):
     user_data = load_json(json_filename_user)
     event_data = load_json(json_filename_event)
     event_participant_data = load_json(json_filename_event_participant)
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     if not validate_event_date(event_details.event_date):
         raise HTTPException(status_code=400, detail="Date is invalid")
@@ -155,6 +152,8 @@ def create_event(username: str, password: str, event_details: EventItem):
 
     return new_event
 
+
+# Menampilkan semua venue olahraga di aplikasi
 def read_all_venue() -> List[VenueItemResponse]:
     venue_data = load_json(json_filename_venue)
     venue_manager_data = load_json(json_filename_venue_manager)
@@ -163,7 +162,9 @@ def read_all_venue() -> List[VenueItemResponse]:
 
     return [VenueItemResponse(**{**venue, 'VenueManager': manager_name.get(venue.pop('VenueManager'), 'Unknown')}) for venue in venue_data]
 
-def read_venues_by_city_matchup(username: str, password: str) -> List[VenueItemResponse]:
+
+# Mencari venue olahraga berdasarkan kota pengguna
+def read_venues_by_city_matchup(username: str) -> List[VenueItemResponse]:
     user_data = load_json(json_filename_user)
     venue_data = load_json(json_filename_venue)
     venue_manager_data = load_json(json_filename_venue_manager)
@@ -171,22 +172,19 @@ def read_venues_by_city_matchup(username: str, password: str) -> List[VenueItemR
     manager_name = {manager['ManagerID']: manager['DisplayName'] for manager in venue_manager_data}
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     city_name = user['City'].lower()
 
     valid_venue_list = []
     for venue in venue_data:
         if venue['City'].lower() == city_name:
-            venue['VenueManager'] = manager_name.get(venue['VenueManager'], 'Unknown')  # Get the manager's name
+            venue['VenueManager'] = manager_name.get(venue['VenueManager'], 'Unknown')  
             valid_venue_list.append(VenueItemResponse(**venue))
 
     return valid_venue_list
 
+
+# Menampilkan semua event olahraga di aplikasi
 def read_all_event() -> List[EventItemResponse]:
     event_data = load_json(json_filename_event)
     user_data = load_json(json_filename_user)
@@ -195,16 +193,13 @@ def read_all_event() -> List[EventItemResponse]:
 
     return [EventItemResponse(**{**event, 'EventOrganizer': user_name.get(event.pop('EventOrganizer'), 'Unknown')}) for event in event_data]
 
-def read_events_by_city_matchup(username: str, password: str) -> List[EventItemResponse]:
+
+# Mencari event olahraga berdasarkan kota pengguna
+def read_events_by_city_matchup(username: str) -> List[EventItemResponse]:
     user_data = load_json(json_filename_user)
     event_data = load_json(json_filename_event)
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     city_name = user['City'].lower()
 
@@ -217,17 +212,14 @@ def read_events_by_city_matchup(username: str, password: str) -> List[EventItemR
 
     return valid_event_list
 
-def create_event_participation(username: str, password: str, event_id: int):
+
+# Berpartisipasi dalam event olahraga pengguna lain
+def create_event_participation(username: str, event_id: int):
     user_data = load_json(json_filename_user)
     event_data = load_json(json_filename_event)
     event_participant_data = load_json(json_filename_event_participant)
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     if any(part for part in event_participant_data if part['UserID'] == user['UserID'] and part['EventID'] == event_id):
         raise HTTPException(status_code=400, detail=f"User {username} participation already exists")
@@ -247,7 +239,9 @@ def create_event_participation(username: str, password: str, event_id: int):
 
     return new_participant
 
-def read_user_by_city_matchup(username: str, password: str) -> List[UserItemResponse]:
+
+# Mencari profil pengguna lain berdasarkan kota pengguna
+def read_user_by_city_matchup(username: str) -> List[UserItemResponse]:
     user_data = load_json(json_filename_user)
     sport_data = load_json(json_filename_sport)
     sport_preference_data = load_json(json_filename_sport_preference)
@@ -255,11 +249,6 @@ def read_user_by_city_matchup(username: str, password: str) -> List[UserItemResp
     sport_names = {sport['SportID']: sport['SportName'] for sport in sport_data}
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     city_name = user['City'].lower()
 
@@ -274,7 +263,9 @@ def read_user_by_city_matchup(username: str, password: str) -> List[UserItemResp
 
     return valid_user_list
 
-def read_user_by_sport_matchup(username: str, password: str) -> List[UserItemResponse]:
+
+# Mencari profil pengguna lain berdasarkan preferensi olahraga pengguna
+def read_user_by_sport_matchup(username: str) -> List[UserItemResponse]:
     user_data = load_json(json_filename_user)
     sport_data = load_json(json_filename_sport)
     sport_preference_data = load_json(json_filename_sport_preference)
@@ -282,11 +273,6 @@ def read_user_by_sport_matchup(username: str, password: str) -> List[UserItemRes
     sport_names = {sport['SportID']: sport['SportName'] for sport in sport_data}
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     user_sport_ids = [pref['SportID'] for pref in sport_preference_data if pref['UserID'] == user['UserID']]
 
@@ -301,7 +287,9 @@ def read_user_by_sport_matchup(username: str, password: str) -> List[UserItemRes
 
     return valid_user_list
 
-def read_user_by_city_and_sport_matchup(username: str, password: str) -> List[UserItemResponse]:
+
+# Mencari profil orang lain berdasarkan preferensi olahraga dan kota pengguna
+def read_user_by_city_and_sport_matchup(username: str) -> List[UserItemResponse]:
     user_data = load_json(json_filename_user)
     sport_data = load_json(json_filename_sport)
     sport_preference_data = load_json(json_filename_sport_preference)
@@ -309,11 +297,6 @@ def read_user_by_city_and_sport_matchup(username: str, password: str) -> List[Us
     sport_names = {sport['SportID']: sport['SportName'] for sport in sport_data}
 
     user = next((user for user in user_data if user['UserName'] == username), None)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User {username} not found")
-
-    if user['Password'] != password:
-        raise HTTPException(status_code=400, detail=f"Wrong password")
 
     city_name = user['City'].lower()
     user_sport_ids = [pref['SportID'] for pref in sport_preference_data if pref['UserID'] == user['UserID']]
@@ -330,6 +313,8 @@ def read_user_by_city_and_sport_matchup(username: str, password: str) -> List[Us
 
     return valid_user_list
 
+
+# Fungsi-fungsi untuk validasi dan format waktu
 def validate_event_date(event_date: DateItem):
     if event_date.year < 1 or event_date.month < 1 or event_date.month > 12 or event_date.day < 1:
         return False
