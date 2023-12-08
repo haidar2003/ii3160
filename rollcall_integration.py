@@ -61,7 +61,6 @@ def matchmaking(username: str):
     matched_users = []
     for user in rollcall:
         if any(boardgame in username for boardgame in user['boardgame']):
-            # Remove the password from the user data
             user_without_password = {key: value for key, value in user.items() if key != 'password'}
             matched_users.append(user_without_password)
     return matched_users
