@@ -56,15 +56,6 @@ def remove_boardgame(user_name: str, boardgame_id: int):
 
 
 # Matchmaking
-def matchmaking(username: str):
-    rollcall = load_json(json_filename_rollcall)
-    matched_users = []
-    for user in rollcall:
-        if any(boardgame in username for boardgame in user['boardgame']):
-            user_without_password = {key: value for key, value in user.items() if key != 'password'}
-            matched_users.append(user_without_password)
-    return matched_users
-
 def matchmaking_rollcall(username):
     rollcall_users = load_json('rollcall')
     user_boardgames = next((user['Boardgame'] for user in rollcall_users if user['UserName'] == username), None)

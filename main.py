@@ -180,17 +180,17 @@ async def add_event_participation(event_id: int, current_user: User = Depends(ge
     return create_event_participation(current_user.UserName, event_id)
 
 
-# INTEGRASI Tambah preferensi boardgame
+# Integrasi dengan Roll Call, menambah preferensi boardgame
 @app.post('/user/boardgame')
 async def add_user_boardgame(boardgame_id: int, current_user: User = Depends(get_current_active_user)):
     return add_boardgame(current_user.UserName, boardgame_id)
 
-# INTEGRASI Hapus preferensi boardgame
+# Integrasi dengan Roll Call, menghapus preferensi boardgame
 @app.delete('/user/boardgame')
 async def remove_user_boardgame(boardgame_id: int, current_user: User = Depends(get_current_active_user)):
     return remove_boardgame(current_user.UserName, boardgame_id)
 
-# INTEGRASI Matchmaking Boardgame
+# Integrasi dengan Roll Call, mencari profil pengguna dengan preferensi boardgame yang sama
 @app.get('/matchup/rollcall/matchmaking')
 async def matchmaking(current_user: User = Depends(get_current_active_user)):
     return matchmaking_rollcall(current_user.UserName)
