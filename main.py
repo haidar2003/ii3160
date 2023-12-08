@@ -4,6 +4,7 @@ from models import *
 from user import *
 from matchup import *
 from sport import *
+from rollcall_integration import *
 from datetime import timedelta
 
 
@@ -177,3 +178,19 @@ async def get_all_event(current_user: User = Depends(get_current_active_user)):
 @app.post('/event/{event_id}/join/')
 async def add_event_participation(event_id: int, current_user: User = Depends(get_current_active_user)):
     return create_event_participation(current_user.UserName, event_id)
+
+
+# INTEGRASI Tambah preferensi boardgame
+@app.post('/user/boardgame')
+async def add_user_boardgame(boardgame_id: int, current_user: User = Depends(get_current_active_user)):
+    return add_boardgame(current_user.UserName, boardgame_id)
+
+# INTEGRASI Hapus preferensi boardgame
+@app.delete('/user/boardgame')
+async def remove_user_boardgame(boardgame_id: int, current_user: User = Depends(get_current_active_user)):
+    return remove_boardgame(current_user.UserName, boardgame_id)
+
+# INTEGRASI Matchmaking Boardgame
+@app.get('/matchup/rollcall/matchmaking')
+async def matchmaking(current_user: User = Depends(get_current_active_user)):
+    return matchmaking_rollcall(current_user.UserName)

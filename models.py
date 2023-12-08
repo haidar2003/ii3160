@@ -93,3 +93,10 @@ class UserInDB(User):
 
 class UserCreate(UserBase):
     Password: str
+
+class BoardGame(BaseModel):
+    UserName: str
+    boardgame: List[int]
+
+class RollCall(BaseModel):
+    rollcall: List[BoardGame]
